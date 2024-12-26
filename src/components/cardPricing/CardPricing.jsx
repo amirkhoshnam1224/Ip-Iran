@@ -1,11 +1,7 @@
-import React from 'react'
 
-function Card() {
+function CardPricing() {
     return (
         <div>
-
-
-
             <div className="mt-4 max-w-sm mx-auto px-4 mt-16">
                 <div className="bg-white border rounded text-center px-4 pt-6 pb-8 shadow">
                     <h3 className="text-2xl">
@@ -25,7 +21,7 @@ function Card() {
                         <div className="mt-3">Unlimited seats</div>
                     </div>
                     <div className="mt-8">
-                        <a href="" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <a href="" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                             Start my 14-day trial
                         </a>
                     </div>
@@ -35,4 +31,4 @@ function Card() {
     )
 }
 
-export default Card
+export default CardPricing
