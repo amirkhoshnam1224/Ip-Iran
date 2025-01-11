@@ -1,12 +1,45 @@
-
+import './features.css'
 function FeaturesSection() {
   return (
-    <div className="w-5/6">
-      <h2 className="">FeaturesSection</h2>
-      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nihil molestiae et quasi illo est fugit autem repellat animi quae consequuntur quam accusamus delectus, libero numquam debitis perferendis totam, nesciunt nulla.
-      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nihil molestiae et quasi illo est fugit autem repellat animi quae consequuntur quam accusamus delectus, libero numquam debitis perferendis totam, nesciunt nulla.
-      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nihil molestiae et quasi illo est fugit autem repellat animi quae consequuntur quam accusamus delectus, libero numquam debitis perferendis totam, nesciunt nulla.
-      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nihil molestiae et quasi illo est fugit autem repellat animi quae consequuntur quam accusamus delectus, libero numquam debitis perferendis totam, nesciunt nulla.
+    <div className="w-5/6 ">
+      <h2 className="">آی‌پی ثابت و معتبر ایران</h2>
+      <p className="">آیا میدانید احتیاجی به تهیه اشتراک های گران قیمت
+جهت تماشای سایت های سینمایی و ورزشی ایرانی مورد علاقه خودتان ندارید 
+<br/>
+<br/>
+از طریق سرویس ip iran میتوانید از خارج ایران به کلیه سایت های ایرانی دسترسی پیدا کنید
+و پس از آن به صورت کاملا رایگان از پخش زنده و دانلود سایت های ایران لذت ببرید  
+<br/>
+<br/>
+TV3 <br/>
+Varzesh3 <br/>
+Televebion <br/>
+Filimo<br/>
+<br/>
+ بدون محدودیت حجم
+بدین معنا که شما سرویس های ما رو گیگی خریداری نمیکنید
+و به صورت اشتراکی برای یکماه الی یکسال می خرید 
+با هر میزان مصرفی که دارید
+<br/><br/>
+بدون محدودیت دسترسی به تمامی سایت ها و سرویس های ایرانی اعم از:
+<br/>
+⭕️اینترنت بانک و همراه بانک🏧<br/>
+⭕️درگاه های رسمی و دولتی<br/>
+⭕️سایتهای دانشگاهی و آموزشی<br/>
+⭕️تماشا و دانلود فیلم و سریال🎬<br/>
+<br/>
+ قابل استفاده با تمامی پلتفرم های اندروید و ایفون و ویندوز و مک 
+با پشتیبانی ۲۴ ساعته 
+<br/>
+ تست رایگان <br/>
+جهت اطمینان مشتریان گرامی
+برای سرعت و عدم قطع و وصلی
+<br/><br/>
+
+لیبل اعتماد :  ایران یک سرویس بسیار ساده است
+که از طریق اتصال با نرم افزار بین المللی و شناخته شده ی open vpn 
+آی پی هموطنان خارج از کشور را به IP ایران تغییر می دهد
+تا بتوانند بدون دغدغه به انجام امور کاری و شخصی شان بپردازند.</p>
     </div>
   )
 }

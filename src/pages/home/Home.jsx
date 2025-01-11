@@ -6,20 +6,20 @@ import FeaturesSection from '../../components/FeaturesSection/FeaturesSection';
 
 function Home() {
   return (
-    <div className="w-full h-full  ">
+    <div className="w-full h-full  " >
       <HeroSection />
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center mt-4" dir="rtl">
         <FeaturesSection/>
       </div>
-      <div className="mt-6">
+      <div className="mt-6" dir="rtl">
         <ProductShowcase />
       </div>
-      <div className="flex justify-center m-2  px-4 py-8   ">
+      <div className="flex justify-center m-2 px-4 py-8" dir="rtl">
         <div className="w-full max-w-5xl">
           <FQASection />
         </div>
       </div>
-      <div className="flex flex-wrap justify-center gap-4 bg-black bg-opacity-25 ">
+      <div className="w-full ">
         <PricingSection />
       </div>
 
