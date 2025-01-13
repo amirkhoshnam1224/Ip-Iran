@@ -1,8 +1,15 @@
 import { useState, useEffect } from "react";
+import AddUserForm from "../../components/addUserForm/AddUserForm";
+import UserTable from "../../components/userTable/UserTable";
 import "./crm.css";
-import axios from "axios";
+import { fetchUsers,addUser } from '../../services/userService'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { deletUser } from "../../services/userService";
+
 function CRM() {
-    const [users, setUsers] = useState([]); // استیت برای لیست کاربران
+
+    const [users, setUsers] = useState([]);
     const [newUser, setNewUser] = useState({
         firstName: "",
         lastName: "",
@@ -16,36 +23,66 @@ function CRM() {
         discount: 0,
         referral: "",
     });
-    
+    const notify = () => {
+        toast.success("کاربر با موفقیت اضافه شد!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
     useEffect(() => {
-        const fetchUsers = async () => {
+        const loadUsers = async () => {
             try {
-                const response = await axios.get('https://backend-crm-production.up.railway.app/api/users');
-                console.log("Fetched users:", response.data);
-                setUsers(response.data); // ذخیره داده‌ها در استیت
+                const data = await fetchUsers()
+                setUsers(data);
             } catch (error) {
                 console.error("Error fetching users:", error);
             }
         };
-    
-        fetchUsers();
+        loadUsers();
     }, []);
+
+    const deletHandler = async (id) => {
+        try {
+            const response = await deletUser(id.trim());
+            if (response && response.status === 200) { 
+                toast.success("کاربر با موفقیت حذف شد!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+                const updatedUsers = await fetchUsers(); // بازخوانی لیست کاربران
+                setUsers(updatedUsers);
+            } else {
+                toast.error("خطا در حذف کاربر. لطفاً دوباره تلاش کنید.");
+            }
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            toast.error("خطا در حذف کاربر. لطفاً دوباره تلاش کنید.");
+        }
+    };
     
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-    
         setNewUser((prev) => ({
-            ...prev, [name]: value,
-        }))
+            ...prev,
+            [name]: value,
+        }));
     };
-    
+
+      
     const adduser = async () => {
         try {
-            const response = await axios.post("https://backend-crm-production.up.railway.app/api/users", newUser);
-            console.log("User added:", response.data);
-    
-            const updatedUsers = [...users, response.data];
-            setUsers(updatedUsers);
+            const createdUser  = await addUser(newUser)
+            setUsers((prevUsers) => [...prevUsers, createdUser]);
             setNewUser({
                 firstName: "",
                 lastName: "",
@@ -59,139 +96,24 @@ function CRM() {
                 discount: 0,
                 referral: "",
             });
+            notify(); 
         } catch (error) {
             console.error("Error adding user:", error);
+            toast.error("خطا در ثبت کاربر. لطفاً دوباره تلاش کنید."); // پیام خطا
+
         }
     };
-    
-
-
 
     return (
         <div className="page-container">
+             <ToastContainer /> 
             <h1>مدیریت کاربران (CRM)</h1>
-
-            {/* فرم افزودن کاربر */}
-            <div className="form-container">
-                <h2>افزودن کاربر جدید</h2>
-                <input
-                    name="firstName"
-                    value={newUser.firstName}
-                    onChange={handleInputChange}
-                    placeholder="نام"
-                />
-                <input
-                    name="lastName"
-                    value={newUser.lastName}
-                    onChange={handleInputChange}
-                    placeholder="نام خانوادگی"
-                />
-                <input
-                    name="accountId"
-                    value={newUser.accountId}
-                    onChange={handleInputChange}
-                    placeholder="آیدی اکانت"
-                />
-                <input
-                    name="startDate"
-                    type="date"
-                    value={newUser.startDate}
-                    onChange={handleInputChange}
-                />
-                <input
-                    name="endDate"
-                    type="date"
-                    value={newUser.endDate}
-                    onChange={handleInputChange}
-                />
-                <select name="plan" value={newUser.plan} onChange={handleInputChange}>
-                    <option value="">انتخاب پلن</option>
-                    <option value="1 ماه">1 ماه</option>
-                    <option value="3 ماه">3 ماه</option>
-                    <option value="6 ماه">6 ماه</option>
-                </select>
-                <input
-                    name="userCount"
-                    type="number"
-                    value={newUser.userCount}
-                    onChange={handleInputChange}
-                    placeholder="تعداد کاربران"
-                />
-                <select
-                    name="service"
-                    value={newUser.service}
-                    onChange={handleInputChange}
-                >
-                    <option value="">انتخاب سرویس</option>
-                    <option value="OpenVPN">OpenVPN</option>
-                    <option value="V2Ray">V2Ray</option>
-                </select>
-                <input
-                    name="payment"
-                    type="number"
-                    value={newUser.payment}
-                    onChange={handleInputChange}
-                    placeholder="مبلغ دریافتی"
-                />
-                <input
-                    name="discount"
-                    type="number"
-                    value={newUser.discount}
-                    onChange={handleInputChange}
-                    placeholder="تخفیف"
-                />
-                <select
-                    name="referral"
-                    value={newUser.referral}
-                    onChange={handleInputChange}
-                >
-                    <option value="">نحوه آشنایی</option>
-                    <option value="Telegram">تلگرام</option>
-                    <option value="Instagram">اینستاگرام</option>
-                    <option value="Website">سایت</option>
-                </select>
-                <button onClick={adduser}>افزودن کاربر</button>
-            </div>
-
-            {/* نمایش لیست کاربران */}
-            <div className="table-container">
-                <h2>لیست کاربران</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>نام</th>
-                            <th>نام خانوادگی</th>
-                            <th>آیدی اکانت</th>
-                            <th>تاریخ شروع</th>
-                            <th>تاریخ پایان</th>
-                            <th>پلن</th>
-                            <th>تعداد کاربران</th>
-                            <th>سرویس</th>
-                            <th>مبلغ</th>
-                            <th>تخفیف</th>
-                            <th>منبع آشنایی</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.map((user, index) => (
-                            <tr key={index}>
-                                <td>{user.firstName}</td>
-                                <td>{user.lastName}</td>
-                                <td>{user.accountId}</td>
-                                <td>{user.startDate}</td>
-                                <td>{user.endDate}</td>
-                                <td>{user.plan}</td>
-                                <td>{user.userCount}</td>
-                                <td>{user.service}</td>
-                                <td>{user.payment}</td>
-                                <td>{user.discount}</td>
-                                <td>{user.referral}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
- 
-            </div>
+            <AddUserForm
+                newUser={newUser}
+                handleInputChange={handleInputChange}
+                adduser={adduser}
+            />
+            <UserTable users={users} deletHandler={deletHandler}/>
         </div>
     );
 }
