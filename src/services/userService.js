@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5002/api/users";
+// const BASE_URL = "http://localhost:5002/api/users";
+const BASE_URL = "https://backend-crm-production.up.railway.app/api/users";
 
 export const fetchUsers = async () => {
   try {
@@ -8,7 +9,7 @@ export const fetchUsers = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -32,3 +33,4 @@ export const deletUser = async (id) => {
     throw error;
   }
 };
+

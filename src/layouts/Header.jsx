@@ -1,5 +1,6 @@
 import logo from '../assets/icon/logo.jpeg';
 import backgroundImage from '../assets/icon/7e89292b-ee1e-4da0-b752-f53299d0aa01.jpg';
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -11,13 +12,14 @@ const Header = () => {
       <div className="  bg-black bg-opacity-25">
         <div className="container mx-auto flex justify-between items-center py-45">
           {/* دکمه خرید اشتراک */}
-          <a
-            href="/plans"
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded md:block"
+          <a href="/plans"
+            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded md:block "
           >
-            خرید اشتراک
+            <Link to="/login" className=" hover:ml-2">
+              ثبت‌نام / ورود
+            </Link>          
           </a>
- 
+
           {/* منوی ناوبری */}
           <nav className="hidden md:flex space-x-6">
             <a href="/" className="hover:text-gray-300">خانه</a>

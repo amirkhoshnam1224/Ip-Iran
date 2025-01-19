@@ -4,7 +4,7 @@ import {Card,CardHeader,CardBody,Typography,}from"@material-tailwind/react";
       <Card className="mt-6 w-96">
         <CardHeader color="blue-gray" className="relative h-56">
           <img
-          className="w-12/12"
+          className="w-full h-full"
             src={image}
             alt="card-image"
           />
