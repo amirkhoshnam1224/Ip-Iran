@@ -29,48 +29,45 @@ function AddUserForm({ newUser, handleInputChange, adduser }) {
         value={newUser.startDate}
         onChange={handleInputChange}
       />
-      endDate
-      <input
-        name="endDate"
-        type="date"
-        value={newUser.endDate}
-        onChange={handleInputChange}
-      />
-      <select name="plan" value={newUser.plan} onChange={handleInputChange}>
-        <option value="">انتخاب پلن</option>
-        <option value="1 ماه">1 ماه</option>
-        <option value="3 ماه">3 ماه</option>
-        <option value="6 ماه">6 ماه</option>
-      </select>
-      تعداد کاربران
-      <input
-        name="userCount"
-        type="number"
-        value={newUser.userCount}
-        onChange={handleInputChange}
-        placeholder="تعداد کاربران"
-      />
-      <select name="service" value={newUser.service} onChange={handleInputChange}>
-        <option value="">انتخاب سرویس</option>
-        <option value="OpenVPN">OpenVPN</option>
-        <option value="V2Ray">V2Ray</option>
-      </select>
-      مبلغ دریافتی
-      <input
-        name="payment"
-        type="number"
-        value={newUser.payment}
-        onChange={handleInputChange}
-        placeholder="مبلغ دریافتی"
-      />
-      تخفیف
-      <input
-        name="discount"
-        type="number"
-        value={newUser.discount}
-        onChange={handleInputChange}
-        placeholder="تخفیف"
-      />
+
+
+      <div className="space-y-2">
+        <label className="block text-gray-700 font-medium">پلن:</label>
+        <select
+          name="plan"
+          value={newUser.plan}
+          onChange={handleInputChange}
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+        >
+          <option value="1 ماه">1 ماه</option>
+          <option value="3 ماه">3 ماه</option>
+          <option value="6 ماه">6 ماه</option>
+          <option value="12 ماه">12 ماه</option>
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        <label className="block text-gray-700 font-medium">مبلغ دریافتی (تومان):</label>
+        <input
+          name="payment"
+          type="number"
+          value={newUser.payment}
+          onChange={handleInputChange}
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="block text-gray-700 font-medium">تخفیف (٪):</label>
+        <input
+          name="discount"
+          type="number"
+          value={newUser.discount}
+          readOnly
+          className="w-full px-4 py-2 border rounded-lg bg-gray-100 focus:outline-none"
+        />
+      </div>
+
       <select name="referral" value={newUser.referral} onChange={handleInputChange}>
         <option value="">نحوه آشنایی</option>
         <option value="Telegram">تلگرام</option>

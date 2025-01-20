@@ -6,6 +6,7 @@ import { fetchUsers,addUser } from '../../services/userService'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { deletUser } from "../../services/userService";
+import { data } from "react-router-dom";
 
 function CRM() {
 
@@ -14,11 +15,10 @@ function CRM() {
         firstName: "",
         lastName: "",
         accountId: "",
-        startDate: "",
-        endDate: "",
+        startDate: new Date().toISOString().split("T")[0], // تاریخ روز جاری
         plan: "",
         userCount: 1,
-        service: "",
+        service: "OpenVPN",
         payment: 0,
         discount: 0,
         referral: "",
@@ -69,15 +69,58 @@ function CRM() {
             toast.error("خطا در حذف کاربر. لطفاً دوباره تلاش کنید.");
         }
     };
-    
+ 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setNewUser((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+    
+        const planPrices = {
+            "1 ماه": 320000,
+            "3 ماه": 720000,
+            "6 ماه": 1120000,
+            "12 ماه": 1920000,
+        };
+    
+        setNewUser((prev) => {
+            // مبلغ پلن فعلی
+            const currentPlanPrice = planPrices[prev.plan] || 0;
+    
+            // تنظیم مقدار جدید مبلغ دریافتی
+            let updatedPayment = prev.payment;
+            if (name === "payment") {
+                updatedPayment = parseFloat(value);
+            }
+    
+            // تنظیم مقدار پلن
+            let updatedPlan = prev.plan;
+            if (name === "plan") {
+                updatedPlan = value;
+                updatedPayment = planPrices[value] || 0; // اگر پلن تغییر کند، مبلغ به‌روز می‌شود
+            }
+    
+            // محاسبه تخفیف فقط در صورت تغییر مبلغ دریافتی یا پلن
+            let discount = prev.discount;
+            if (name === "payment" || name === "plan") {
+                const newPlanPrice = planPrices[updatedPlan] || 0;
+                if (newPlanPrice > updatedPayment) {
+                    discount = Math.round(((newPlanPrice - updatedPayment) / newPlanPrice) * 100);
+                } else {
+                    discount = 0; // اگر تخفیفی نباشد
+                }
+            }
+    
+            // بازگشت مقدار جدید به state
+            return {
+                ...prev,
+                [name]: value,
+                payment: updatedPayment,
+                plan: updatedPlan,
+                discount, // مقدار تخفیف به‌روزرسانی‌شده
+            };
+        });
     };
-
+    
+    
+    
       
     const adduser = async () => {
         try {
@@ -87,8 +130,7 @@ function CRM() {
                 firstName: "",
                 lastName: "",
                 accountId: "",
-                startDate: "",
-                endDate: "",
+                startDate: new Date().toISOString().split("T")[0],
                 plan: "",
                 userCount: 1,
                 service: "",
