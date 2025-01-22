@@ -1,11 +1,11 @@
-import axios from "axios";
 
-// const BASE_URL = "http://localhost:5002/api/users";
-const BASE_URL = "https://backend-crm-production.up.railway.app/api/users";
+import API from "./api"; 
+
+
 
 export const fetchUsers = async () => {
   try {
-    const response = await axios.get(BASE_URL);
+    const response = await API.get("/users");
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -16,7 +16,7 @@ export const fetchUsers = async () => {
 export const addUser = async (user) => {
 
   try {
-    const response = await axios.post(BASE_URL, user)
+    const response = await API.post("/users",user)
     return response.data
   } catch (error) {
     console.error("error add user:", error)
@@ -26,7 +26,7 @@ export const addUser = async (user) => {
 export const deletUser = async (id) => {
   try {
 
-    const response = await axios.delete(`${BASE_URL}/${id}`);
+    const response = await API.delete(`users/${id}`);
     return response;
   } catch (error) {
     console.error("خطا در حذف کاربر:", error);

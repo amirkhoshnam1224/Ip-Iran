@@ -1,15 +1,17 @@
-import axios from "axios";
+import API from "./api"; 
 
 
 export const signUpUser = async ({ formData }) => {
+    
 
-    const BASE_URL = "http://localhost:5002/api/auth/signup";
     try {
-        const response = await axios.post(BASE_URL, formData);
+        const response = await API.post("/auth/signup", formData);
         console.log("resault", response);
         return response;
     } catch (error) {
         console.error("Signup error:", error);
-        throw error; 
+        throw error;
     }
 };
+
+
