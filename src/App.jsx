@@ -7,6 +7,7 @@ import Crm from "./pages/crm/Crm";
 import InvoicePage from "./pages/invoicePage/InvoicePage";
 import SignUp from "./pages/signUp/SignUp";
 import Login from './pages/login/Login'
+import CreateUser from "./pages/createUser/CreateUser";
 function App() {
   return (
     <div  className="font-sans">
@@ -19,6 +20,7 @@ function App() {
             <Route path="crm" element={<Crm />} />
             <Route path="signUp" element={<SignUp />} />
             <Route path="login" element={<Login/>}/>
+            <Route path="createUser" element={<CreateUser/>}/>
             <Route path="/invoice/:mounth/:price/:off" element={<InvoicePage />} />
 
             {/* مسیرهای ناموجود */}

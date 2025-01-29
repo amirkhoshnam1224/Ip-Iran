@@ -56,6 +56,7 @@ function CRM() {
         const loadUsers = async () => {
             try {
                 const data = await fetchUsers()
+                console.log(data)
                 setUsers(data);
             } catch (error) {
                 console.error("Error fetching users:", error);
@@ -75,20 +76,6 @@ function CRM() {
         }
       };
       
-    // const addChannel = async (channelName) => {
-    //     try {
-    //         await AddChannel(channelName); // ارسال کانال جدید به بک‌اند
-    //         const fetchedChannels = await GetChannels(); // به‌روزرسانی لیست کانال‌ها
-    //         setNewUser((prev) => ({
-    //             ...prev,
-    //             telegramChannels: fetchedChannels,
-    //         }));
-    //         toast.success("کانال با موفقیت اضافه شد!");
-    //     } catch (error) {
-    //         console.error("Error adding channel:", error);
-    //         toast.error("خطا در افزودن کانال.");
-    //     }
-    // };
 
 
 
@@ -118,7 +105,6 @@ function CRM() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        console.log(`${name} changed to:`, value); // برای بررسی تغییرات
         
         const planPrices = {
             "1 ماه": 320000,
