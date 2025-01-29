@@ -95,6 +95,7 @@ function AddUserForm({ newUser, handleInputChange, adduser, addChannel, channels
           className="w-full px-4 py-2 border rounded-lg bg-gray-100 focus:outline-none"
         />
       </div>
+      
 
       {/* نحوه آشنایی */}
       <div className="space-y-2">
@@ -111,7 +112,11 @@ function AddUserForm({ newUser, handleInputChange, adduser, addChannel, channels
           <option value="Website">سایت</option>
         </select>
       </div>
-
+      <select name="service" value={newUser.service} onChange={handleInputChange}>
+        <option value="">انتخاب سرویس</option>
+        <option value="OpenVPN">OpenVPN</option>
+        <option value="V2Ray">V2Ray</option>
+      </select>
       {/* دکمه افزودن کاربر */}
       <button
         onClick={adduser}
