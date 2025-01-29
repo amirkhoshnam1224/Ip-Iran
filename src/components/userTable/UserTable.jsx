@@ -30,8 +30,8 @@ function UserTable({ users, deletHandler }) {
               <td>{user.startDate}</td>
               <td>{user.endDate}</td>
               <td>{user.plan}</td>
-              <td>{user.userCount}</td>
               <td>{user.service}</td>
+              <td>{user.userCount}</td>
               <td>{user.payment}</td>
               <td>{user.discount}</td>
               <td>{user.referral}</td>
