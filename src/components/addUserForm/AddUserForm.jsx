@@ -1,6 +1,49 @@
-import React from "react";
 
-function AddUserForm({ newUser, handleInputChange, adduser, addChannel, channels }) {
+import { useState } from "react";
+
+const CustomDropdown = ({ channels, selectedChannel, setSelectedChannel, handleDeleteChannel }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      {/* دکمه‌ی نمایش منو */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-4 py-2 border rounded-lg bg-white shadow-md text-right focus:outline-none"
+      >
+        {selectedChannel || "انتخاب کانال تلگرام"}
+      </button>
+
+      {/* لیست کانال‌ها */}
+      {isOpen && (
+        <div className="absolute w-full mt-1 bg-white border rounded-lg shadow-lg z-10">
+          {channels.map((channel) => (
+            <div
+              key={channel._id}
+              className="flex justify-between items-center px-4 py-2 hover:bg-gray-100 cursor-pointer"
+            >
+              {/* انتخاب کانال */}
+              <span onClick={() => { setSelectedChannel(channel.name); setIsOpen(false); }}>
+                {channel.name}
+              </span>
+
+              {/* دکمه حذف کانال */}
+              <button
+                onClick={() => handleDeleteChannel(channel._id)}
+                className="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-700"
+              >
+                حذف
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+function AddUserForm({ newUser, handleInputChange, adduser, channels ,handleDeleteChannel ,}) {
+  const [selectedChannel, setSelectedChannel] = useState("");
+
   return (
     <div className="form-container">
       <h2>افزودن کاربر جدید</h2>
@@ -24,24 +67,13 @@ function AddUserForm({ newUser, handleInputChange, adduser, addChannel, channels
       />
 
       {/* انتخاب کانال تلگرام */}
-      <div className="space-y-2">
-        <label className="block text-gray-700 font-medium">انتخاب کانال تلگرام:</label>
-        <select
-          name="accountId"
-          value={newUser.accountId} // اتصال به accountId
-          onChange={handleInputChange} // بروزرسانی state
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none"
-        >
-          <option value="">انتخاب کنید</option>
-          {channels.map((channel) => (
-            <option key={channel._id} value={channel.name}>
-              {channel.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-
+          {/* انتخاب کانال تلگرام با منوی سفارشی */}
+          <CustomDropdown
+        channels={channels}
+        selectedChannel={selectedChannel}
+        setSelectedChannel={setSelectedChannel}
+        handleDeleteChannel={handleDeleteChannel}
+      />
 
 
       {/* انتخاب تاریخ شروع */}

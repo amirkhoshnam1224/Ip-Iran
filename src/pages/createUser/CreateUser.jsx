@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { loginToPanel } from "../../services/loginPanel";
-import {addUserToInbound,getClientTrafficsByEmail,getClientTrafficsById} from '../../services/addUsers'
+import { loginToPanel } from "../../services/loginPanelSanaei";
+import {addUserToInbound,getClientTrafficsByEmail,getClientTrafficsById} from '../../services/addUsersSanaei'
 
 const CreateUser = () => {
   const [loginData, setLoginData] = useState({
