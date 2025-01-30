@@ -1,6 +1,8 @@
 import API from "./api"; 
 const ADD_CHANNEL_URL = `/channels/add`;
 const GET_CHANNELS_URL = `/channels/list`;
+const DELETE_CHANNELS_URL = `/channels/delete`;
+
 export const AddChannel = async (channelName) => {
     try {
         const response = await API.post(ADD_CHANNEL_URL,{name: channelName});
@@ -17,6 +19,15 @@ export const GetChannels = async () => {
         return response.data.channels;
     } catch (error) {
         console.error("Error while fetching channels:", error.response?.data || error.message);
+        throw error;
+    }
+};
+export const DeleteChannel = async (idUser) => {
+    try {
+        const response = await API.delete(`${DELETE_CHANNELS_URL}/${idUser}`);
+        return response;
+    } catch (error) {
+        console.error("Error deleting channels:", error.response?.data || error.message);
         throw error;
     }
 };

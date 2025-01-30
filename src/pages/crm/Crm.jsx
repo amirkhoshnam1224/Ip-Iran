@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import AddUserForm from "../../components/addUserForm/AddUserForm";
 import UserTable from "../../components/userTable/UserTable";
 import "./crm.css";
-import { fetchUsers, addUser } from '../../services/userService'
+import { fetchUsers, addUser } from '../../services/userServiceCrm'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { deletUser } from "../../services/userService";
-import { GetChannels, AddChannel } from "../../services/ChannelTelegram";
+import { deletUser } from "../../services/userServiceCrm";
+import { GetChannels, AddChannel, DeleteChannel } from "../../services/ChannelTelegram";
 
 
 
@@ -25,6 +25,7 @@ function CRM() {
         discount: 0,
         referral: "",
     });
+    const [refreshChannel,setRefreshChannel] = useState(false)
 
     const notify = () => {
         toast.success("کاربر با موفقیت اضافه شد!", {
@@ -48,7 +49,7 @@ function CRM() {
             }
         };
         fetchChannels();
-    }, []);
+    }, [refreshChannel]);
 
 
     //fetch users
@@ -56,7 +57,6 @@ function CRM() {
         const loadUsers = async () => {
             try {
                 const data = await fetchUsers()
-                console.log(data)
                 setUsers(data);
             } catch (error) {
                 console.error("Error fetching users:", error);
@@ -69,6 +69,7 @@ function CRM() {
         try {
           const newChannel = await AddChannel(channelName); // فرض کنید AddChannel کانال جدید را برمی‌گرداند
           setChannels((prevChannels) => [...prevChannels, newChannel]); // اضافه کردن مستقیم کانال جدید به لیست
+          setRefreshChannel(prev => !prev);
           toast.success("کانال با موفقیت اضافه شد!");
         } catch (error) {
           console.error("Error adding channel:", error);
@@ -181,6 +182,35 @@ function CRM() {
         }
     };
 
+    //delet channel
+    const handleDeleteChannel = async (id) => {
+        try {
+            const response = await DeleteChannel(id);
+            setRefreshChannel(!refreshChannel)
+            // بررسی پاسخ سرور
+            if (response.status === 200) {
+                toast.success("✅ حذف کانال با موفقیت انجام شد!");
+            } else {
+                toast.error(`⚠️ خطا در حذف کانال: ${response.data?.message || "مشکلی پیش آمده است."}`);
+            }
+    
+        } catch (error) {
+            console.error("Error deleting channel:", error);
+    
+            // بررسی انواع خطاها
+            if (error.response) {
+                // خطای مربوط به درخواست (مانند خطای 404، 500 و غیره)
+                toast.error(`❌ خطا در سرور: ${error.response.status} - ${error.response.data?.message || "لطفاً دوباره تلاش کنید."}`);
+            } else if (error.request) {
+                // درخواست ارسال شده اما پاسخی دریافت نشده
+                toast.error("❌ سرور پاسخ نمی‌دهد. لطفاً اتصال اینترنت خود را بررسی کنید.");
+            } else {
+                // سایر خطاها (مثلاً مشکل در کد)
+                toast.error(`⚠️ خطای غیرمنتظره: ${error.message}`);
+            }
+        }
+    };
+    
     return (
         <div className="page-container">
             <ToastContainer />
@@ -207,6 +237,7 @@ function CRM() {
                 adduser={adduser}
                 addChannel={addChannel}
                 channels={channels}
+                handleDeleteChannel={handleDeleteChannel}
 
             />
             <UserTable users={users} deletHandler={deletHandler} />
