@@ -3,7 +3,7 @@ const ADD_CHANNEL_URL = `/channels/add`;
 const GET_CHANNELS_URL = `/channels/list`;
 const DELETE_CHANNELS_URL = `/channels/delete`;
 
-export const AddChannel = async (channelName) => {
+export const AddChannelServise = async (channelName) => {
     try {
         const response = await API.post(ADD_CHANNEL_URL,{name: channelName});
         return response.data; // بازگرداندن داده‌ها
@@ -13,7 +13,7 @@ export const AddChannel = async (channelName) => {
     }
 };
 // دریافت لیست کانال‌ها
-export const GetChannels = async () => {
+export const GetChannelsServise = async () => {
     try {
         const response = await API.get(GET_CHANNELS_URL);
         return response.data.channels;
@@ -22,7 +22,7 @@ export const GetChannels = async () => {
         throw error;
     }
 };
-export const DeleteChannel = async (idUser) => {
+export const DeleteChannelServise = async (idUser) => {
     try {
         const response = await API.delete(`${DELETE_CHANNELS_URL}/${idUser}`);
         return response;

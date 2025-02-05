@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import AddUserForm from "../../components/addUserForm/AddUserForm";
 import UserTable from "../../components/userTable/UserTable";
 import "./crm.css";
-import { fetchUsers, addUser } from '../../services/userServiceCrm'
+import { fetchUsersServise, addUserServise } from '../../services/userServiceCrm'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { deletUser } from "../../services/userServiceCrm";
-import { GetChannels, AddChannel, DeleteChannel } from "../../services/ChannelTelegram";
+import { deletUserServise, updateUserService } from "../../services/userServiceCrm";
+import { GetChannelsServise, AddChannelServise, DeleteChannelServise } from "../../services/ChannelTelegram";
 
 
 
@@ -18,6 +18,7 @@ function CRM() {
         lastName: "",
         accountId: "", // کانال انتخاب‌شده از لیست
         startDate: new Date().toISOString().split("T")[0], // تاریخ روز جاری
+        endDate: "",
         plan: "",
         userCount: 1,
         service: "OpenVPN",
@@ -25,7 +26,8 @@ function CRM() {
         discount: 0,
         referral: "",
     });
-    const [refreshChannel,setRefreshChannel] = useState(false)
+    const [refreshChannel, setRefreshChannel] = useState(false)
+    const [selectEditeUser, setSelectEditeUser] = useState("")
 
     const notify = () => {
         toast.success("کاربر با موفقیت اضافه شد!", {
@@ -40,15 +42,15 @@ function CRM() {
     };
     //get chenel telegram
     useEffect(() => {
-        const fetchChannels = async () => {
+        const fetchChannelsServise = async () => {
             try {
-                const fetchedChannels = await GetChannels(); // فرض کنید GetChannels لیستی از کانال‌ها را بازمی‌گرداند
+                const fetchedChannels = await GetChannelsServise(); // فرض کنید GetChannels لیستی از کانال‌ها را بازمی‌گرداند
                 setChannels(fetchedChannels);
             } catch (error) {
                 console.error("Error fetching channels:", error);
             }
         };
-        fetchChannels();
+        fetchChannelsServise();
     }, [refreshChannel]);
 
 
@@ -56,7 +58,7 @@ function CRM() {
     useEffect(() => {
         const loadUsers = async () => {
             try {
-                const data = await fetchUsers()
+                const data = await fetchUsersServise();
                 setUsers(data);
             } catch (error) {
                 console.error("Error fetching users:", error);
@@ -67,22 +69,22 @@ function CRM() {
 
     const addChannel = async (channelName) => {
         try {
-          const newChannel = await AddChannel(channelName); // فرض کنید AddChannel کانال جدید را برمی‌گرداند
-          setChannels((prevChannels) => [...prevChannels, newChannel]); // اضافه کردن مستقیم کانال جدید به لیست
-          setRefreshChannel(prev => !prev);
-          toast.success("کانال با موفقیت اضافه شد!");
+            const newChannel = await AddChannelServise(channelName); // فرض کنید AddChannel کانال جدید را برمی‌گرداند
+            setChannels((prevChannels) => [...prevChannels, newChannel]); // اضافه کردن مستقیم کانال جدید به لیست
+            setRefreshChannel(prev => !prev);
+            toast.success("کانال با موفقیت اضافه شد!");
         } catch (error) {
-          console.error("Error adding channel:", error);
-          toast.error("خطا در افزودن کانال.");
+            console.error("Error adding channel:", error);
+            toast.error("خطا در افزودن کانال.");
         }
-      };
-      
+    };
 
 
 
-    const deletHandler = async (id) => {
+
+    const deletHandlerUser = async (id) => {
         try {
-            const response = await deletUser(id.trim());
+            const response = await deletUserServise(id.trim());
             if (response && response.status === 200) {
                 toast.success("کاربر با موفقیت حذف شد!", {
                     position: "top-right",
@@ -93,7 +95,7 @@ function CRM() {
                     draggable: true,
                     progress: undefined,
                 });
-                const updatedUsers = await fetchUsers(); // بازخوانی لیست کاربران
+                const updatedUsers = await fetchUsersServise(); // بازخوانی لیست کاربران
                 setUsers(updatedUsers);
             } else {
                 toast.error("خطا در حذف کاربر. لطفاً دوباره تلاش کنید.");
@@ -103,10 +105,25 @@ function CRM() {
             toast.error("خطا در حذف کاربر. لطفاً دوباره تلاش کنید.");
         }
     };
+    const editeHandlerUser = (id) => {
+        console.log(id)
+        const userToEdite = users.find(user => user._id === id)
+        setNewUser(userToEdite)
+        setSelectEditeUser(userToEdite)
+
+    }
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        
+
+        const planDurations = {
+            "1 ماه": 30,
+            "3 ماه": 90,
+            "6 ماه": 180,
+            "12 ماه": 365,
+        };
+
         const planPrices = {
             "1 ماه": 320000,
             "3 ماه": 720000,
@@ -115,77 +132,87 @@ function CRM() {
         };
 
         setNewUser((prev) => {
-            // مبلغ پلن فعلی
+            let updatedUser = { ...prev, [name]: value };
 
-            // تنظیم مقدار جدید مبلغ دریافتی
-            let updatedPayment = prev.payment;
-            if (name === "payment") {
-                updatedPayment = parseFloat(value);
-            }
-
-            // تنظیم مقدار پلن
-            let updatedPlan = prev.plan;
+            // تنظیم مقدار پلن و مبلغ پرداختی
             if (name === "plan") {
-                updatedPlan = value;
-                updatedPayment = planPrices[value] || 0; // اگر پلن تغییر کند، مبلغ به‌روز می‌شود
+                updatedUser.payment = planPrices[value] || 0;
             }
 
-            // محاسبه تخفیف فقط در صورت تغییر مبلغ دریافتی یا پلن
-            let discount = prev.discount;
+            // محاسبه تخفیف در صورت تغییر مبلغ دریافتی یا پلن
             if (name === "payment" || name === "plan") {
-                const newPlanPrice = planPrices[updatedPlan] || 0;
-                if (newPlanPrice > updatedPayment) {
-                    discount = Math.round(((newPlanPrice - updatedPayment) / newPlanPrice) * 100);
+                const newPlanPrice = planPrices[updatedUser.plan] || 0;
+                updatedUser.discount =
+                    newPlanPrice > updatedUser.payment
+                        ? Math.round(((newPlanPrice - updatedUser.payment) / newPlanPrice) * 100)
+                        : 0;
+            }
+
+            // محاسبه `endDate` در صورت تغییر `plan` یا `startDate`
+            if (name === "plan" || name === "startDate") {
+                const startDate = new Date(updatedUser.startDate);
+                const daysToAdd = planDurations[updatedUser.plan] || 0;
+
+                if (!isNaN(startDate) && daysToAdd > 0) {
+                    const endDate = new Date(startDate);
+                    endDate.setDate(endDate.getDate() + daysToAdd);
+                    updatedUser.endDate = endDate.toISOString().split("T")[0]; // تبدیل به فرمت YYYY-MM-DD
                 } else {
-                    discount = 0; // اگر تخفیفی نباشد
+                    updatedUser.endDate = ""; // مقدار را پاک کن اگر مقدار نامعتبر بود
                 }
             }
 
-            // بازگشت مقدار جدید به state
-            return {
-                ...prev,
-                [name]: value,
-                payment: updatedPayment,
-                plan: updatedPlan,
-                discount, // مقدار تخفیف به‌روزرسانی‌شده
-            };
+            return updatedUser;
+        });
+    };
+
+
+
+
+
+
+ const adduser = async () => {
+    try {
+        if (selectEditeUser) {
+            // ارسال تغییر کابر
+            const response = await updateUserService(selectEditeUser._id, newUser);
+            console.log("Updated user response:", response);
+        } else {
+            // در غیر این صورت، کاربر جدید اضافه شود
+            console.log("Creating new user:", newUser);
+            const createdUser = await addUserServise(newUser);
+            console.log("New user created:", createdUser);
+
+            setUsers((prevUsers) => [...prevUsers, createdUser]);
+        }
+
+        // ریست فرم بعد از ارسال موفق
+        setNewUser({
+            firstName: "",
+            lastName: "",
+            accountId: "",
+            startDate: new Date().toISOString().split("T")[0],
+            plan: "",
+            userCount: 1,
+            service: "",
+            payment: 0,
+            discount: 0,
+            referral: "",
         });
 
-    };
+        setSelectEditeUser(""); // خروج از حالت ویرایش
+        toast.success("عملیات با موفقیت انجام شد!");
+    } catch (error) {
+        console.error("خطا در افزودن یا ویرایش کاربر:", error);
+        toast.error("خطا در ثبت کاربر. لطفاً دوباره تلاش کنید.");
+    }
+};
 
-
-
-
-    const adduser = async () => {
-        try {
-            console.log("acc",newUser.accountId);
-            const createdUser = await addUser(newUser);
-            setUsers((prevUsers) => [...prevUsers, createdUser]);
-            setNewUser({
-                firstName: "",
-                lastName: "",
-                accountId: "",
-                startDate: new Date().toISOString().split("T")[0],
-                plan: "",
-                userCount: 1,
-                service: "",
-                payment: 0,
-                discount: 0,
-                referral: "",
-            });
-          
-            notify();
-        } catch (error) {
-            console.error("Error adding user:", error);
-            toast.error("خطا در ثبت کاربر. لطفاً دوباره تلاش کنید."); // پیام خطا
-
-        }
-    };
 
     //delet channel
     const handleDeleteChannel = async (id) => {
         try {
-            const response = await DeleteChannel(id);
+            const response = await DeleteChannelServise(id);
             setRefreshChannel(!refreshChannel)
             // بررسی پاسخ سرور
             if (response.status === 200) {
@@ -193,10 +220,10 @@ function CRM() {
             } else {
                 toast.error(`⚠️ خطا در حذف کانال: ${response.data?.message || "مشکلی پیش آمده است."}`);
             }
-    
+
         } catch (error) {
             console.error("Error deleting channel:", error);
-    
+
             // بررسی انواع خطاها
             if (error.response) {
                 // خطای مربوط به درخواست (مانند خطای 404، 500 و غیره)
@@ -210,7 +237,7 @@ function CRM() {
             }
         }
     };
-    
+
     return (
         <div className="page-container">
             <ToastContainer />
@@ -229,7 +256,7 @@ function CRM() {
                 />
             </div>
 
-           
+
             <h1>مدیریت کاربران (CRM)</h1>
             <AddUserForm
                 newUser={newUser}
@@ -238,9 +265,9 @@ function CRM() {
                 addChannel={addChannel}
                 channels={channels}
                 handleDeleteChannel={handleDeleteChannel}
-
+                selectEditeUser={selectEditeUser}
             />
-            <UserTable users={users} deletHandler={deletHandler} />
+            <UserTable users={users} deletHandlerUser={deletHandlerUser} editeHandlerUser={editeHandlerUser} />
         </div>
     );
 }

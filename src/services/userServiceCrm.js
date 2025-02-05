@@ -1,9 +1,6 @@
+import API from "./api";
 
-import API from "./api"; 
-
-
-
-export const fetchUsers = async () => {
+export const fetchUsersServise = async () => {
   try {
     const response = await API.get("/users");
     return response.data;
@@ -13,8 +10,7 @@ export const fetchUsers = async () => {
   }
 };
 
-export const addUser = async (user) => {
-
+export const addUserServise = async (user) => {
   try {
     const response = await API.post("/users",user)
     return response.data
@@ -23,9 +19,8 @@ export const addUser = async (user) => {
   }
 }
 
-export const deletUser = async (id) => {
+export const deletUserServise = async (id) => {
   try {
-
     const response = await API.delete(`users/${id}`);
     return response;
   } catch (error) {
@@ -34,3 +29,12 @@ export const deletUser = async (id) => {
   }
 };
 
+export const updateUserService = async (id, updateUserData) => {
+  try {
+    const response = await API.put(`/users/${id}`, updateUserData);
+    return response.data;
+  } catch (error) {
+    console.error("خطا در بروزرسانی کاربر:", error);
+    throw error;
+  }
+};

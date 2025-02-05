@@ -1,5 +1,5 @@
 
-function UserTable({ users, deletHandler }) {
+function UserTable({ users, deletHandlerUser, editeHandlerUser }) {
 
 
   return (
@@ -8,17 +8,16 @@ function UserTable({ users, deletHandler }) {
       <table>
         <thead>
           <tr>
-            <th>نام</th>
-            <th>نام خانوادگی</th>
-            <th>آیدی اکانت</th>
-            <th>تاریخ شروع</th>
-            <th>تاریخ پایان</th>
-            <th>پلن</th>
-            <th>تعداد کاربران</th>
-            <th>سرویس</th>
-            <th>مبلغ</th>
-            <th>تخفیف</th>
-            <th>منبع آشنایی</th>
+            <th>firstName</th>
+            <th>lastName</th>
+            <th> accountId telegram</th>
+            <th> startDate</th>
+            <th> endDate</th>
+            <th>plan</th>
+            <th>payment</th>
+            <th>discount</th>
+            <th> referral</th>
+            <th>service</th>
           </tr>
         </thead>
         <tbody>
@@ -27,20 +26,27 @@ function UserTable({ users, deletHandler }) {
               <td>{user.firstName}</td>
               <td>{user.lastName}</td>
               <td>{user.accountId}</td>
-              <td>{user.startDate}</td>
-              <td>{user.endDate}</td>
+              <td>{user.startDate ? user.startDate.split("T")[0] : ""}</td>
+              <td>{user.endDate ? user.endDate.split("T")[0] : ""}</td>
+
               <td>{user.plan}</td>
-              <td>{user.service}</td>
-              <td>{user.userCount}</td>
               <td>{user.payment}</td>
-              <td>{user.discount}</td>
+              <td>%{user.discount}</td>
               <td>{user.referral}</td>
+              <td>{user.service}</td>
+              {/* <td>{user.userCount}</td> */}
               <td>
                 <button
                   className="mx-auto bg-blue-600 text-white px-2 py-1 rounded"
-                  onClick={() => deletHandler(user._id)}
+                  onClick={() => deletHandlerUser(user._id)}
                 >
                   Delete
+                </button>
+                <button
+                  className="mx-auto bg-blue-600 text-white px-2 py-1 rounded"
+                  onClick={() => editeHandlerUser(user._id)}
+                >
+                  edite
                 </button>
               </td>
             </tr>
