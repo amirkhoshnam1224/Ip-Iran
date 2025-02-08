@@ -17,9 +17,9 @@ function CRM() {
         firstName: "",
         lastName: "",
         accountId: "", // کانال انتخاب‌شده از لیست
-        startDate: new Date().toISOString().split("T")[0], // تاریخ روز جاری
+        startDate:"",
         endDate: "",
-        plan: "",
+        plan: "1 ماه",
         userCount: 1,
         service: "OpenVPN",
         payment: 0,
@@ -116,29 +116,29 @@ function CRM() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-
+    
         const planDurations = {
             "1 ماه": 30,
             "3 ماه": 90,
             "6 ماه": 180,
             "12 ماه": 365,
         };
-
+    
         const planPrices = {
             "1 ماه": 320000,
             "3 ماه": 720000,
             "6 ماه": 1120000,
             "12 ماه": 1920000,
         };
-
+    
         setNewUser((prev) => {
             let updatedUser = { ...prev, [name]: value };
-
+    
             // تنظیم مقدار پلن و مبلغ پرداختی
             if (name === "plan") {
                 updatedUser.payment = planPrices[value] || 0;
             }
-
+    
             // محاسبه تخفیف در صورت تغییر مبلغ دریافتی یا پلن
             if (name === "payment" || name === "plan") {
                 const newPlanPrice = planPrices[updatedUser.plan] || 0;
@@ -147,27 +147,33 @@ function CRM() {
                         ? Math.round(((newPlanPrice - updatedUser.payment) / newPlanPrice) * 100)
                         : 0;
             }
-
-            // محاسبه `endDate` در صورت تغییر `plan` یا `startDate`
-            if (name === "plan" || name === "startDate") {
-                const startDate = new Date(updatedUser.startDate);
-                const daysToAdd = planDurations[updatedUser.plan] || 0;
-
-                if (!isNaN(startDate) && daysToAdd > 0) {
-                    const endDate = new Date(startDate);
-                    endDate.setDate(endDate.getDate() + daysToAdd);
-                    updatedUser.endDate = endDate.toISOString().split("T")[0]; // تبدیل به فرمت YYYY-MM-DD
-                } else {
-                    updatedUser.endDate = ""; // مقدار را پاک کن اگر مقدار نامعتبر بود
+    
+            // **محاسبه `startDate` و `endDate` بر اساس مقدار ورودی**
+            if (name === "plan" || name === "startDate" || name === "endDate") {
+                let startDate = new Date(updatedUser.startDate);
+                let endDate = new Date(updatedUser.endDate);
+                let daysToAdd = planDurations[updatedUser.plan] || 0;
+    
+                // اگر کاربر `endDate` را مستقیماً وارد کند، `startDate` را محاسبه کنیم
+                if (name === "endDate") {
+                    if (!isNaN(endDate) && daysToAdd > 0) {
+                        startDate = new Date(endDate);
+                        startDate.setDate(endDate.getDate() - daysToAdd);
+                        updatedUser.startDate = startDate.toISOString().split("T")[0];
+                    }
+                } 
+                // اگر کاربر `startDate` و `plan` را تغییر داد، `endDate` را محاسبه کنیم
+                else if (!isNaN(startDate) && daysToAdd > 0) {
+                    endDate = new Date(startDate);
+                    endDate.setDate(startDate.getDate() + daysToAdd);
+                    updatedUser.endDate = endDate.toISOString().split("T")[0];
                 }
             }
-
+    
             return updatedUser;
         });
     };
-
-
-
+    
 
 
 

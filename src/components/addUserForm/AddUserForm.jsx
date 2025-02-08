@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CustomDropdown from './customDropdown/CustomDropdown'
-function AddUserForm({ newUser, handleInputChange, adduser, channels, handleDeleteChannel,selectEditeUser }) {
+function AddUserForm({ newUser, handleInputChange, adduser, channels, handleDeleteChannel, selectEditeUser }) {
     const [selectedChannel, setSelectedChannel] = useState("");
 
     const handelChannelSelect = (channelSelect) => {
@@ -70,16 +70,18 @@ function AddUserForm({ newUser, handleInputChange, adduser, channels, handleDele
                 </select>
             </div>
             {/* نمایش تاریخ پایان سرویس (غیرقابل تغییر) */}
-            {/* <div className="space-y-2">
+            {/* انتخاب تاریخ پایان سرویس */}
+            <div className="space-y-2">
                 <label className="block text-gray-700 font-medium">تاریخ پایان سرویس:</label>
                 <input
                     name="endDate"
                     type="date"
                     value={newUser.endDate}
-                    readOnly
-                    className="w-full px-4 py-2 border rounded-lg bg-gray-100 focus:outline-none"
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none"
                 />
-            </div> */}
+            </div>
+
 
             {/* مبلغ دریافتی */}
             <div className="space-y-2">
