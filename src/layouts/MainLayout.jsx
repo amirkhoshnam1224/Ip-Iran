@@ -1,15 +1,15 @@
-import Header from "./Header"; // مسیر کامپوننت Header
+import NavbarCustom from "./Header"; // مسیر کامپوننت Header
 import Footer from "./Footer"; // مسیر کامپوننت Footer
 import { Outlet } from "react-router-dom"; // برای نمایش محتوای صفحات
 
 const MainLayout = () => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="w-full">
       {/* Header */}
-      <Header />
+      <NavbarCustom />
 
       {/* Main Content */}
-      <main className="flex-grow">
+      <main className="">
         <Outlet />
       </main>
 

@@ -5,9 +5,8 @@ import bank from '../../assets/image/bank.jpg'
 import movie from '../../assets/image/movie.jpg'
 function ProductShowcase() {
   return (
-    <div className="flex flex-wrap justify-center gap-4 mt-1">
-      <CardProductShowcase
-
+    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 p-4  ">
+      <CardProductShowcase 
         image={sana}
         header="امور قضایی"
         paragraf="
@@ -55,7 +54,8 @@ function ProductShowcase() {
 
       <CardProductShowcase
         image={movie}
-        header="تماشای کاملا رایگان فیلم و سریال های ایرانی"
+        header="تماشای رایگان فیلم و سریال های ایرانی"
+        
         paragraf="
 با ip iran محدودیت ها رو کنار بزن
 و آرشیو بهترین فیلم و سریال های ایرانی 

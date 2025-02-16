@@ -1,8 +1,9 @@
 import {Card,CardHeader,CardBody,Typography,}from"@material-tailwind/react";
   export function CardProductShowcase({image,header,paragraf}) {
     return (
-      <Card className="mt-6 w-96">
-        <CardHeader color="blue-gray" className="relative h-56">
+      <Card className="  "
+      style={{backgroundColor:"#D2D2D2"}}>
+        <CardHeader color="blue-gray" className="relative max-h-72 ">
           <img
           className="w-full h-full"
             src={image}
@@ -10,7 +11,7 @@ import {Card,CardHeader,CardBody,Typography,}from"@material-tailwind/react";
           />
         </CardHeader>
         <CardBody>
-          <Typography variant="h5" color="blue-gray" className="mb-2">
+          <Typography variant="h5" color="blue-gray" className="mb-4">
             {header}
           </Typography>
           <Typography>

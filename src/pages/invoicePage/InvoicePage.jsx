@@ -18,7 +18,7 @@ function InvoicePage() {
         <p className="mb-2">مالیات: {tax}$</p>
         <p className="mb-4 font-bold">جمع کل: {total}$</p>
         <a
-          href={`https://paymentgateway.com/pay?amount=${total}`}
+          href={"https://t.me/ipirannovin"}
           target="_blank"
           rel="noopener noreferrer"
           className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded block text-center"

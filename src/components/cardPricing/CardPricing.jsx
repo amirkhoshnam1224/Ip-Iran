@@ -8,12 +8,12 @@ function CardPricing({ mounth, price, off }) {
   };
 
   return (
-    <div className="w-full sm:max-w-sm md:max-w-md px-4 mt-4 mx-auto">
-      <div className="bg-white border rounded text-center px-4 pt-6 pb-8 shadow">
-        <h3 className="text-2xl">{price}$</h3>
+    <div className="">
+      <div className="bg-white border rounded text-center px-1 pt-4 pb-6 shadow">
         <div className="mt-4">
-          <span className="text-red-500 text-2xl line-through">{off}%</span>
+          <span className="text-red-500 text-2xl line-through">{off}$</span>
         </div>
+        <h3 className="text-2xl">{price}$</h3>
         <div className="mt-1">
           <span className="font-bold text-3xl">{mounth}</span>
           <span className="text-gray-600">/ ماه</span>
